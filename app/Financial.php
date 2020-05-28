@@ -33,4 +33,20 @@ class Financial extends Model
         $this->save();
     }
 
+    public function add_consumption($consumption){
+        $consumption_temp = collect($consumption);
+        $temp = collect($this->consumption);
+        $temp->push($consumption_temp);
+        $this->consumption = $temp;
+        $total_consumption = 0;
+        foreach($temp as $item){
+            $total_consumption += $item['sum'];
+        }
+        $this->total_consumption = $total_consumption;
+        $this->total = $this->total_income - $this->total_consumption;
+
+
+        $this->save();
+    }
+
 }

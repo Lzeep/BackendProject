@@ -45,6 +45,11 @@ class FinancialController extends Controller
 
 
     }
+    public function store_consumption(Request $request) {
+        $consumption = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
+        $financial = Company::find($request->company_id)->financial;
+        return $financial->add_consumption($consumption);
+    }
 
     /**
      * Display the specified resource.
