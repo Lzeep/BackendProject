@@ -37,13 +37,11 @@ class FinancialController extends Controller
     public function store_income(Request $request)
     {
         $income = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
-
         $company = Company::find($request->company_id);
         $financial = $company->financial;
-        $financial->add_income($income);
+        $num = $financial->add_income($income);
         $view =view('total', ['company' => $company])->render();
 
-        $view = view('total')->render();
         return response()->json([
             'html_code' => '<tr><td>' . $income['title'] . '</td>
         <td>' . $income['sum'] . '</td>
@@ -59,9 +57,10 @@ class FinancialController extends Controller
     public function store_consumption(Request $request)
     {
         $consumption = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
-         $company = Company::find($request->company_id);
+
+        $company = Company::find($request->company_id);
         $financial = $company->financial;
-        $financial->add_consumption($consumption);
+        $num = $financial->add_consumption($consumption);
         $view = view('total', ['company' => $company])->render();
         return response()->json([
             'html_code' => '
@@ -70,25 +69,29 @@ class FinancialController extends Controller
             <td>' . $consumption['sum'] . '</td>
             <td>' . $consumption['date'] . '</td>
          <td><button data-id="' . $num . '" data-title="consumption" class="income_delete">Delete</button></td>
-         </tr>'
+         </tr>',
+            'view' => $view,
         ]);
     }
 
     public function ajax_delete(Request $request)
     {
+
         $financial = Company::find($request->company_id)->financial;
         if ($request->title == "income") {
+
             $income = collect($financial->income);
+
             unset($income[(int)$request->id]);
             $financial->income = $income;
             $financial->save();
-            dd($income);
         } else {
+
             $consumption = collect($financial->consumption);
             unset($consumption[(int)$request->id]);
             $financial->consumption = $consumption;
+
             $financial->save();
-            dd($consumption);
 
         }
 

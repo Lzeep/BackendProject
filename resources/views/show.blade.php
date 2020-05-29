@@ -25,7 +25,8 @@
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLongTitle"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -69,12 +70,15 @@
             </thead>
             <tbody id="income_table">
             @if($company->financial->income)
-                @foreach($company->financial->income as $income)
+                @foreach($company->financial->income as $key => $income)
                     <tr>
                         <td>{{ $income['title'] }}</td>
                         <td>{{ $income['sum'] }}</td>
                         <td>{{ $income['date'] }}</td>
-                        <td><button data-id="{{ $loop->index }}" data-title="income"   class="income_delete">Delete</button></td>
+                        <td>
+                            <button data-id="{{ $key }}" data-title="income" class="income_delete">Delete
+                            </button>
+                        </td>
                     </tr>
                 @endforeach
             @endif
@@ -129,6 +133,7 @@
             <th>Title</th>
             <th>Sum</th>
             <th>Date</th>
+            <th>action</th>
             </thead>
             <tbody id="consumption_table">
             @if($company->financial->consumption)
@@ -137,7 +142,10 @@
                         <td>{{ $consumption['title'] }}</td>
                         <td>{{ $consumption['sum'] }}</td>
                         <td>{{ $consumption['date'] }}</td>
-                        <td><button data-id="{{ $loop->index }}" data-title="consumption" class="income_delete">Delete</button></td>
+                        <td>
+                            <button data-id="{{ $loop->index }}" data-title="consumption" class="income_delete">Delete
+                            </button>
+                        </td>
                     </tr>
                 @endforeach
             @endif
@@ -145,7 +153,6 @@
         </table>
     </div>
 </div>
-
 
 
 </body>
@@ -169,7 +176,7 @@
                 processData: false,
                 success: function (data) {
                     $('#exampleModalLong').modal('hide');
-                    $('#income_table').prepend(data.html_code);
+                    $('#income_table').append(data.html_code);
                     $('#main').html(data.view);
                 }
             })
@@ -188,29 +195,31 @@
                 processData: false,
                 success: function (data) {
                     $('#ModalLong').modal('hide');
-                    $('#consumption_table').prepend(data.html_code);
+                    $('#consumption_table').append(data.html_code);
                     $('#main').html(data.view);
                 }
             })
         })
 
-        $(document).on('click', '.income_delete', function(event){
+        $(document).on('click', '.income_delete', function (event) {
             let target = $(event.currentTarget);
             let id = target.data('id');
             let title = target.data('title');
+            console.log(id);
+            console.log(title, target);
             $.ajax({
                 url: "{{ route('ajax.delete') }}",
                 method: 'post',
-                data:{
+                data: {
                     'id': id,
                     '_token': "{{ csrf_token() }}",
                     'title': title,
                     'company_id': "{{ $company->id }}",
                 },
                 success: function (data) {
-                    "Success"
+                    let row = target.parent().parent();
+                    row.remove();
                 }
-
 
 
             })
