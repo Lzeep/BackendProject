@@ -37,12 +37,11 @@ class FinancialController extends Controller
     public function store_income(Request $request)
     {
         $income = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
-
         $company = Company::find($request->company_id);
         $financial = $company->financial;
         $num = $financial->add_income($income);
+        $view =view('total', ['company' => $company])->render();
 
-        $view = view('total', ['company' => $company])->render();
         return response()->json([
             'html_code' => '<tr><td>' . $income['title'] . '</td>
         <td>' . $income['sum'] . '</td>
@@ -58,10 +57,10 @@ class FinancialController extends Controller
     public function store_consumption(Request $request)
     {
         $consumption = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
-         $company = Company::find($request->company_id);
+
+        $company = Company::find($request->company_id);
         $financial = $company->financial;
         $num = $financial->add_consumption($consumption);
-
         $view = view('total', ['company' => $company])->render();
         return response()->json([
             'html_code' => '
@@ -83,21 +82,16 @@ class FinancialController extends Controller
         $financial = Company::find($request->company_id)->financial;
         if ($request->title == "income") {
             $income = collect($financial->income);
-            dd($income->first());
-//            $sum = $income->firstWhere('')
             unset($income[(int)$request->id]);
-
-            $financial->total_income = $financial->total_income - $income->sum;
-            dd($financial->total_income, $income->summ);
             $financial->income = $income;
             $financial->save();
+            dd($income);
         } else {
             $consumption = collect($financial->consumption);
             unset($consumption[(int)$request->id]);
             $financial->consumption = $consumption;
             $financial->save();
             dd($consumption);
-
 
         }
 

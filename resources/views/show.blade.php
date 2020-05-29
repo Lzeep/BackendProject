@@ -25,7 +25,8 @@
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLongTitle"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -69,15 +70,18 @@
             </thead>
             <tbody id="income_table">
             @if($company->financial->income)
-                @foreach($company->financial->income as $income)
+                @foreach($company->financial->income as $key => $income)
                     <tr>
                         <td>{{ $income['title'] }}</td>
                         <td>{{ $income['sum'] }}</td>
                         <td>{{ $income['date'] }}</td>
                         <td>
-                            <button data-id="{{ $loop->index }}" data-title="income"   class="btn btn-danger income_delete">Delete</button>
-                            <button data-id="{{ $loop->index }}" data-title="income"   class="btn btn-primary income_delete">Edit</button>
+                            <button data-id="{{ $key }}" data-title="income" class="income_delete">Delete
+                            </button>
+                            <button data-id="{{ $key }}" data-title="income"   class="btn btn-primary income_delete">Edit</button>
+
                         </td>
+
                     </tr>
                 @endforeach
             @endif
@@ -132,7 +136,7 @@
             <th>Title</th>
             <th>Sum</th>
             <th>Date</th>
-            <th>Action</th>
+            <th>action</th>
             </thead>
             <tbody id="consumption_table">
             @if($company->financial->consumption)
@@ -201,24 +205,27 @@
             })
         })
 
-        $(document).on('click', '.income_delete', function(event){
+        $(document).on('click', '.income_delete', function (event) {
             let target = $(event.currentTarget);
             let id = target.data('id');
             let title = target.data('title');
+            console.log(id);
+            console.log(title, target);
             $.ajax({
                 url: "{{ route('ajax.delete') }}",
                 method: 'post',
-                data:{
+                data: {
                     'id': id,
                     '_token': "{{ csrf_token() }}",
                     'title': title,
                     'company_id': "{{ $company->id }}",
                 },
                 success: function (data) {
+                    let row = target.parent().parent();
+                    row.remove();
                     "Success",
                         $('#main').html(data.view);
                 }
-
 
 
             })

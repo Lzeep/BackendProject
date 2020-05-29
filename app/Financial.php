@@ -30,9 +30,10 @@ class Financial extends Model
         }
         $this->total_income = $total_income;
         $this->total = $total_income - $this->total_consumption;
-
+        $key = $temp->keys()->last();
         $this->save();
-        return $temp->count();
+
+        return $key;
     }
 
     public function add_consumption($consumption)
@@ -47,9 +48,9 @@ class Financial extends Model
         }
         $this->total_consumption = $total_consumption;
         $this->total = $this->total_income - $this->total_consumption;
-
+        $key = $temp->keys()->last();
         $this->save();
-        return $temp->count();
+        return $key;
     }
 
 }
