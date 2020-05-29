@@ -31,7 +31,7 @@ class FinancialController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store_income(Request $request)
@@ -40,12 +40,16 @@ class FinancialController extends Controller
         $company = Company::find($request->company_id);
         $financial = $company->financial;
         $num = $financial->add_income($income);
-        $view =view('total', ['company' => $company])->render();
+        $view = view('total', ['company' => $company])->render();
 
         return response()->json([
             'html_code' => '<tr><td>' . $income['title'] . '</td>
         <td>' . $income['sum'] . '</td>
-        <td>' . $income['date'] . '</td><td><button data-id="' . $num . '" data-title="consumption" class="income_delete">Delete</button></td>
+        <td>' . $income['date'] . '</td><td>
+        <button data-id="' . $num . '" data-title="consumption" class="btn btn-danger income_delete">Delete</button>
+        <button data-id="' . $num . '" data-title="consumption" class="btn btn-primary income_delete">Edit</button>
+        </td>
+        
          </tr>',
             'view' => $view,
 
@@ -70,7 +74,9 @@ class FinancialController extends Controller
             <td>' . $consumption['date'] . '</td>
          <td>
          <button data-id="' . $num . '" data-title="consumption" class="btn btn-danger income_delete">Delete</button>
-         <button data-id="' . $num . '" data-title="consumption" class="btn btn-primary income_delete">Edit</button>
+         <button type="button" data-id="' . $num . '" data-title="consumption" class="btn btn-primary edit"data-toggle="modal" data-target="#EditModal">
+                                Edit
+                            </button>
          </td>
          </tr>',
             'view' => $view
@@ -112,10 +118,13 @@ class FinancialController extends Controller
         ]);
     }
 
+    public function ajax_edit() {
+
+    }
     /**
      * Display the specified resource.
      *
-     * @param  \App\Financial $financial
+     * @param \App\Financial $financial
      * @return \Illuminate\Http\Response
      */
     public function show(Financial $financial)
@@ -126,7 +135,7 @@ class FinancialController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Financial $financial
+     * @param \App\Financial $financial
      * @return \Illuminate\Http\Response
      */
     public function edit(Financial $financial)
@@ -137,8 +146,8 @@ class FinancialController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Financial $financial
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Financial $financial
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Financial $financial)
@@ -149,7 +158,7 @@ class FinancialController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Financial $financial
+     * @param \App\Financial $financial
      * @return \Illuminate\Http\Response
      */
     public function destroy(Financial $financial)
