@@ -185,6 +185,7 @@
                                 <input type="date" id="date-input" name="date" class="form-control">
                             <input type="hidden" name="company_id" value="{{ $company->id  }}">
                             <input type="hidden" name="element">
+                            <input type="hidden" name="type">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -280,19 +281,27 @@
             form.children[1].children[5].value = row.children().eq(2).text();
             form.children[1].children[5].value = row.children().eq(2).text();
             form.children[1].children[7].value = id;
+            form.children[1].children[8].value = title;
             console.log(form.children[1].children[7]);
-
-
-        {{--$.ajax({--}}
-            {{--    url: '{{ route('ajax.edit') }}',--}}
-            {{--    method: 'POST',--}}
-            {{--    data: {--}}
-            {{--        --}}
-            {{--    }--}}
-
-            {{--})--}}
         })
+
+        $('#edit_uploader').on('submit', function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: "{{ route('ajax.edit') }}",
+                method: "post",
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    $('#main').html(data.
+                }
+            })
+            })
     })
+
 
 
 </script>

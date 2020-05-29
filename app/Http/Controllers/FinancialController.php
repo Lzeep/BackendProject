@@ -91,20 +91,39 @@ class FinancialController extends Controller
             unset($income[(int)$request->id]);
             $financial->income = $income;
             $financial->save();
-            dd($income);
         } else {
             $consumption = collect($financial->consumption);
             unset($consumption[(int)$request->id]);
             $financial->consumption = $consumption;
             $financial->save();
-            dd($consumption);
 
         }
 
     }
 
-    public function ajax_edit() {
+    public function ajax_edit(Request $request) {
+//        dd($request);
+        $company = Company::find($request->company_id);
+        $financial = $company->financial;
+        if($request->type == "consumption"){
+            $consumptions = collect($financial->consumption);
+            $consumptions[(int)$request->id] = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
+            $financial->consumption = $consumptions;
+            $financial->save();
 
+        }
+        else{
+            $incomes = collect($financial->income);
+            $incomes[(int)$request->id] = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
+            $financial->income = $incomes;
+            $financial->save();
+        }
+        $view = view('total', ['company' => $company])->render();
+
+
+        return response()->json([
+            'view' => $view
+        ]);
     }
     /**
      * Display the specified resource.
