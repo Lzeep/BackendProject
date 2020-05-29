@@ -65,6 +65,7 @@
             <th>Title</th>
             <th>Sum</th>
             <th>Date</th>
+            <th>action</th>
             </thead>
             <tbody id="income_table">
             @if($company->financial->income)
@@ -73,6 +74,7 @@
                         <td>{{ $income['title'] }}</td>
                         <td>{{ $income['sum'] }}</td>
                         <td>{{ $income['date'] }}</td>
+                        <td><button data-id="{{ $loop->index }}" data-title="income"   class="income_delete">Delete</button></td>
                     </tr>
                 @endforeach
             @endif
@@ -135,6 +137,7 @@
                         <td>{{ $consumption['title'] }}</td>
                         <td>{{ $consumption['sum'] }}</td>
                         <td>{{ $consumption['date'] }}</td>
+                        <td><button data-id="{{ $loop->index }}" data-title="consumption" class="income_delete">Delete</button></td>
                     </tr>
                 @endforeach
             @endif
@@ -190,6 +193,31 @@
                 }
             })
         })
+
+        $(document).on('click', '.income_delete', function(event){
+            let target = $(event.currentTarget);
+            let id = target.data('id');
+            let title = target.data('title');
+            $.ajax({
+                url: "{{ route('ajax.delete') }}",
+                method: 'post',
+                data:{
+                    'id': id,
+                    '_token': "{{ csrf_token() }}",
+                    'title': title,
+                    'company_id': "{{ $company->id }}",
+                },
+                success: function (data) {
+                    "Success"
+                }
+
+
+
+            })
+
+        })
     })
+
+
 </script>
 
