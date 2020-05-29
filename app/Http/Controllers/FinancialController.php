@@ -79,22 +79,37 @@ class FinancialController extends Controller
 
     public function ajax_delete(Request $request)
     {
-        $financial = Company::find($request->company_id)->financial;
+        $company = Company::find($request->company_id);
+        $financial = $company->financial;
         if ($request->title == "income") {
             $income = collect($financial->income);
+
+            $deleting_income = $income[(int)$request->id];
+
             unset($income[(int)$request->id]);
             $financial->income = $income;
-            $financial->save();
-            dd($income);
+
+            $financial->total_income = $financial->total_income - $deleting_income['sum'];
+
         } else {
             $consumption = collect($financial->consumption);
+
+            $deleting_consumption = $consumption[(int)$request->id];
+
             unset($consumption[(int)$request->id]);
             $financial->consumption = $consumption;
-            $financial->save();
-            dd($consumption);
 
+            $financial->total_consumption = $financial->total_consumption - $deleting_consumption['sum'];
         }
 
+        $financial->total = $financial->total_income - $financial->total_consumption;
+
+        $financial->save();
+
+        $view = view('total', ['company' => $company])->render();
+        return response()->json([
+            'view' => $view
+        ]);
     }
 
     /**

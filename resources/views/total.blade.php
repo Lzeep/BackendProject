@@ -1,3 +1,4 @@
+
 <table class="table">
     <thead>
     <th>Total income</th>
@@ -6,9 +7,9 @@
     </thead>
     <tbody>
     <tr>
-            <td>{{ $company->financial->total_income }}</td>
-            <td>{{ $company->financial->total_consumption }}</td>
-            <td>{{ $company->financial->total }}</td>
+        <td>{{ $company->financial->total_income }}</td>
+        <td>{{ $company->financial->total_consumption }}</td>
+        <td>{{ $company->financial->total }}</td>
     </tr>
     </tbody>
 </table>
