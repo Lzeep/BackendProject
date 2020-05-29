@@ -74,7 +74,10 @@
                         <td>{{ $income['title'] }}</td>
                         <td>{{ $income['sum'] }}</td>
                         <td>{{ $income['date'] }}</td>
-                        <td><button data-id="{{ $loop->index }}" data-title="income"   class="income_delete">Delete</button></td>
+                        <td>
+                            <button data-id="{{ $loop->index }}" data-title="income"   class="btn btn-danger income_delete">Delete</button>
+                            <button data-id="{{ $loop->index }}" data-title="income"   class="btn btn-primary income_delete">Edit</button>
+                        </td>
                     </tr>
                 @endforeach
             @endif
@@ -129,6 +132,7 @@
             <th>Title</th>
             <th>Sum</th>
             <th>Date</th>
+            <th>Action</th>
             </thead>
             <tbody id="consumption_table">
             @if($company->financial->consumption)
@@ -137,7 +141,10 @@
                         <td>{{ $consumption['title'] }}</td>
                         <td>{{ $consumption['sum'] }}</td>
                         <td>{{ $consumption['date'] }}</td>
-                        <td><button data-id="{{ $loop->index }}" data-title="consumption" class="income_delete">Delete</button></td>
+                        <td>
+                            <button data-id="{{ $loop->index }}" data-title="consumption" class="btn btn-danger income_delete">Delete</button>
+                            <button data-id="{{ $loop->index }}" data-title="consumption" class=" btn btn-primary income_delete">Edit</button>
+                        </td>
                     </tr>
                 @endforeach
             @endif
@@ -169,7 +176,7 @@
                 processData: false,
                 success: function (data) {
                     $('#exampleModalLong').modal('hide');
-                    $('#income_table').prepend(data.html_code);
+                    $('#income_table').append(data.html_code);
                     $('#main').html(data.view);
                 }
             })
@@ -188,7 +195,7 @@
                 processData: false,
                 success: function (data) {
                     $('#ModalLong').modal('hide');
-                    $('#consumption_table').prepend(data.html_code);
+                    $('#consumption_table').append(data.html_code);
                     $('#main').html(data.view);
                 }
             })
@@ -208,7 +215,8 @@
                     'company_id': "{{ $company->id }}",
                 },
                 success: function (data) {
-                    "Success"
+                    "Success",
+                        $('#main').html(data.view);
                 }
 
 

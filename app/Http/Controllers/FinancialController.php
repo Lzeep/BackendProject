@@ -40,10 +40,9 @@ class FinancialController extends Controller
 
         $company = Company::find($request->company_id);
         $financial = $company->financial;
-        $financial->add_income($income);
-        $view =view('total', ['company' => $company])->render();
+        $num = $financial->add_income($income);
 
-        $view = view('total')->render();
+        $view = view('total', ['company' => $company])->render();
         return response()->json([
             'html_code' => '<tr><td>' . $income['title'] . '</td>
         <td>' . $income['sum'] . '</td>
@@ -61,7 +60,8 @@ class FinancialController extends Controller
         $consumption = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
          $company = Company::find($request->company_id);
         $financial = $company->financial;
-        $financial->add_consumption($consumption);
+        $num = $financial->add_consumption($consumption);
+
         $view = view('total', ['company' => $company])->render();
         return response()->json([
             'html_code' => '
@@ -69,8 +69,12 @@ class FinancialController extends Controller
             <td>' . $consumption['title'] . '</td>
             <td>' . $consumption['sum'] . '</td>
             <td>' . $consumption['date'] . '</td>
-         <td><button data-id="' . $num . '" data-title="consumption" class="income_delete">Delete</button></td>
-         </tr>'
+         <td>
+         <button data-id="' . $num . '" data-title="consumption" class="btn btn-danger income_delete">Delete</button>
+         <button data-id="' . $num . '" data-title="consumption" class="btn btn-primary income_delete">Edit</button>
+         </td>
+         </tr>',
+            'view' => $view
         ]);
     }
 
@@ -79,16 +83,21 @@ class FinancialController extends Controller
         $financial = Company::find($request->company_id)->financial;
         if ($request->title == "income") {
             $income = collect($financial->income);
+            dd($income->first());
+//            $sum = $income->firstWhere('')
             unset($income[(int)$request->id]);
+
+            $financial->total_income = $financial->total_income - $income->sum;
+            dd($financial->total_income, $income->summ);
             $financial->income = $income;
             $financial->save();
-            dd($income);
         } else {
             $consumption = collect($financial->consumption);
             unset($consumption[(int)$request->id]);
             $financial->consumption = $consumption;
             $financial->save();
             dd($consumption);
+
 
         }
 
