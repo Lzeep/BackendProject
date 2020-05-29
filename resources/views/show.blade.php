@@ -76,9 +76,10 @@
                         <td>{{ $income['sum'] }}</td>
                         <td>{{ $income['date'] }}</td>
                         <td>
-                            <button data-id="{{ $key }}" data-title="income" class="income_delete">Delete
+                            <button data-id="{{ $key }}" data-title="income" class=" btn btn-danger income_delete">
+                                Delete
                             </button>
-                            <button data-id="{{ $key }}" data-title="income"   class="btn btn-primary income_delete">Edit</button>
+                            <button data-id="{{ $key }}" data-title="income" class="btn btn-primary edit">Edit</button>
 
                         </td>
 
@@ -140,23 +141,62 @@
             </thead>
             <tbody id="consumption_table">
             @if($company->financial->consumption)
-                @foreach($company->financial->consumption as $consumption)
+                @foreach($company->financial->consumption as $key =>$consumption)
                     <tr>
                         <td>{{ $consumption['title'] }}</td>
                         <td>{{ $consumption['sum'] }}</td>
                         <td>{{ $consumption['date'] }}</td>
                         <td>
-                            <button data-id="{{ $loop->index }}" data-title="consumption" class="btn btn-danger income_delete">Delete</button>
-                            <button data-id="{{ $loop->index }}" data-title="consumption" class=" btn btn-primary income_delete">Edit</button>
+                            <button data-id="{{ $key }}" data-title="consumption"
+                                    class="btn btn-danger income_delete">Delete
+                            </button>
+                            <button type="button" data-id="{{ $key }}" class="btn btn-primary edit" data-title="consumption" data-toggle="modal" data-target="#EditModal">
+                                Edit
+                            </button>
                         </td>
                     </tr>
                 @endforeach
             @endif
             </tbody>
         </table>
+
+        <!-- Modal -->
+        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Consumption</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="edit_uploader" action="#" method="post">
+                        @csrf
+                        <div class="modal-body">
+
+                                <label for="title-input">Title</label>
+                                <input type="text" id="title-input" name="title" class="form-control">
+
+                                <label for="sum-input">Sum</label>
+                                <input type="text" id="sum-input" name="sum" class="form-control">
+
+                                <label for="date-input">Date</label>
+                                <input type="date" id="date-input" name="date" class="form-control">
+                            <input type="hidden" name="company_id" value="{{ $company->id  }}">
+                            <input type="hidden" name="element">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+{{--        End Modal--}}
     </div>
 </div>
-
 
 
 </body>
@@ -226,10 +266,31 @@
                     "Success",
                         $('#main').html(data.view);
                 }
-
-
             })
+        })
+        $(document).on('click', '.edit', function (event) {
+            let target = $(event.currentTarget);
+            let id = target.data('id');
+            let title = target.data('title');
+            let row = target.parent().parent();
+            let form = document.getElementById('edit_uploader');
 
+            form.children[1].children[1].value = row.children().eq(0).text();
+            form.children[1].children[3].value = row.children().eq(1).text();
+            form.children[1].children[5].value = row.children().eq(2).text();
+            form.children[1].children[5].value = row.children().eq(2).text();
+            form.children[1].children[7].value = id;
+            console.log(form.children[1].children[7]);
+
+
+        {{--$.ajax({--}}
+            {{--    url: '{{ route('ajax.edit') }}',--}}
+            {{--    method: 'POST',--}}
+            {{--    data: {--}}
+            {{--        --}}
+            {{--    }--}}
+
+            {{--})--}}
         })
     })
 
