@@ -17,3 +17,4 @@ Route::get('/', 'CompanyController@index');
 Route::get('show/{company}', 'CompanyController@show')->name('show.company');
 Route::post('/ajax_income', 'FinancialController@store_income')->name('ajax.income');
 Route::post('/ajax_consumption', 'FinancialController@store_consumption')->name('ajax.consumption');
+

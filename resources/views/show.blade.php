@@ -12,125 +12,139 @@
 
 </head>
 <body>
-<h1>{{ $company->title  }}</h1>
-<table class="table">
-    <thead>
-    <th>Income</th>
-    <th>consumption</th>
-    </thead>
-    <tbody>
-    @if($company->financial->income)
-    @foreach($company->financial->income as $financial)
-        <td>{{ $financial['title'] . ' ' .$financial['sum'] }}</td>
+<h1>{{ $company->title . 'company' }}</h1>
+<div id="main">
+@include('total', $company)
+</div>
+<div class="row">
+    <div class="col-6">
+        <h2>Incomes</h2>
 
-    @endforeach
-    @endif
-    @if($company->financial->consumption)
-    @foreach($company->financial->consumption as $financial)
-        <td>{{ $financial['title'] . ' ' .$financial['sum'] }}</td>
-    @endforeach
-        @endif
-    </tbody>
-</table>
-<div class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Modal body text goes here.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+            Launch demo modal
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="income_uploader" action="#" method="post">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="title-input">Title</label>
+                                <input type="text" id="title-input" name="title" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="sum-input">Sum</label>
+                                <input type="text" id="sum-input" name="sum" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="date-input">Date</label>
+                                <input type="date" id="date-input" name="date" class="form-control">
+                            </div>
+                            <input type="hidden" name="company_id" value="{{ $company->id  }}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+        <table class="table">
+            <thead>
+            <th>Title</th>
+            <th>Sum</th>
+            <th>Date</th>
+            </thead>
+            <tbody id="income_table">
+            @if($company->financial->income)
+                @foreach($company->financial->income as $income)
+                    <tr>
+                        <td>{{ $income['title'] }}</td>
+                        <td>{{ $income['sum'] }}</td>
+                        <td>{{ $income['date'] }}</td>
+                    </tr>
+                @endforeach
+            @endif
+            </tbody>
+        </table>
     </div>
-</div>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-    Launch demo modal
-</button>
+    <div class="col-6">
+        <h2>Consumptions</h2>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="income_uploader" action="#" method="post">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="title-input">Title</label>
-                        <input type="text" id="title-input" name="title" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="sum-input">Sum</label>
-                        <input type="text" id="sum-input" name="sum" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="date-input">Date</label>
-                        <input type="date" id="date-input" name="date" class="form-control">
-                    </div>
-                    <input type="hidden" name="company_id" value="{{ $company->id  }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalLong">
-    Add consupmtion
-</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalLong">
+            Add consupmtion
+        </button>
 
-<!-- Modal -->
-<div class="modal fade" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <!-- Modal -->
+        <div class="modal fade" id="ModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="consumption_uploader" action="#" method="post">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="title-input">Title</label>
+                                <input type="text" id="title-input" name="title" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="sum-input">Sum</label>
+                                <input type="text" id="sum-input" name="sum" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="date-input">Date</label>
+                                <input type="date" id="date-input" name="date" class="form-control">
+                            </div>
+                            <input type="hidden" name="company_id" value="{{ $company->id  }}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <form id="consumption_uploader" action="#" method="post">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="title-input">Title</label>
-                        <input type="text" id="title-input" name="title" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="sum-input">Sum</label>
-                        <input type="text" id="sum-input" name="sum" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="date-input">Date</label>
-                        <input type="date" id="date-input" name="date" class="form-control">
-                    </div>
-                    <input type="hidden" name="company_id" value="{{ $company->id  }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
         </div>
+        <table class="table">
+            <thead>
+            <th>Title</th>
+            <th>Sum</th>
+            <th>Date</th>
+            </thead>
+            <tbody id="consumption_table">
+            @if($company->financial->consumption)
+                @foreach($company->financial->consumption as $consumption)
+                    <tr>
+                        <td>{{ $consumption['title'] }}</td>
+                        <td>{{ $consumption['sum'] }}</td>
+                        <td>{{ $consumption['date'] }}</td>
+                    </tr>
+                @endforeach
+            @endif
+            </tbody>
+        </table>
     </div>
 </div>
+
+
+
 </body>
 </html>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -151,7 +165,9 @@
                 cache: false,
                 processData: false,
                 success: function (data) {
-                alert("Запись добавлен!");
+                    $('#exampleModalLong').modal('hide');
+                    $('#income_table').prepend(data.html_code);
+                    $('#main').html(data.view);
                 }
             })
         })
@@ -168,7 +184,9 @@
                 cache: false,
                 processData: false,
                 success: function (data) {
-                alert("Запись добавлен!");
+                    $('#ModalLong').modal('hide');
+                    $('#consumption_table').prepend(data.html_code);
+                    $('#main').html(data.view);
                 }
             })
         })

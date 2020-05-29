@@ -15,7 +15,7 @@ class FinancialController extends Controller
      */
     public function index()
     {
-        //
+        return view('total', ['companies' => Company::where('company_id', 1)]);
     }
 
     /**
@@ -41,14 +41,27 @@ class FinancialController extends Controller
 
         $financial = Company::find($request->company_id)->financial;
 
-        return $financial->add_income($income);
+        $financial->add_income($income);
+
+        return response()->json([
+            'html_code' => '<tr><td>' . $income['title'] .'</td>
+        <td>' . $income['sum'] .'</td>
+        <td>' . $income['date'] .'</td></tr>',
+            'view' => view('total')->render()
+        ]);
 
 
     }
     public function store_consumption(Request $request) {
         $consumption = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
         $financial = Company::find($request->company_id)->financial;
-        return $financial->add_consumption($consumption);
+        $financial->add_consumption($consumption);
+
+        return response()->json([
+            'html_code' => '<tr><td>' . $consumption['title'] .'</td>
+        <td>' . $consumption['sum'] .'</td>
+        <td>' . $consumption['date'] .'</td></tr>'
+        ]);
     }
 
     /**
