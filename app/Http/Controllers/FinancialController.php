@@ -15,7 +15,7 @@ class FinancialController extends Controller
      */
     public function index()
     {
-        return view('total', ['companies' => Company::where('company_id', 1)]);
+
     }
 
     /**
@@ -39,28 +39,31 @@ class FinancialController extends Controller
         $income = collect(['title'=>$request->title, 'sum' => $request->sum, 'date' => $request->date]);
 
 
-        $financial = Company::find($request->company_id)->financial;
-
+        $company = Company::find($request->company_id);
+        $financial = $company->financial;
         $financial->add_income($income);
+        $view =view('total', ['company' => $company])->render();
 
         return response()->json([
             'html_code' => '<tr><td>' . $income['title'] .'</td>
         <td>' . $income['sum'] .'</td>
         <td>' . $income['date'] .'</td></tr>',
-            'view' => view('total')->render()
+            'view' => $view
         ]);
 
 
     }
     public function store_consumption(Request $request) {
         $consumption = collect(['title' => $request->title, 'sum' => $request->sum, 'date' => $request->date]);
-        $financial = Company::find($request->company_id)->financial;
+        $company = Company::find($request->company_id);
+        $financial = $company->financial;
         $financial->add_consumption($consumption);
-
+        $view = view('total', ['company' => $company])->render();
         return response()->json([
             'html_code' => '<tr><td>' . $consumption['title'] .'</td>
         <td>' . $consumption['sum'] .'</td>
-        <td>' . $consumption['date'] .'</td></tr>'
+        <td>' . $consumption['date'] .'</td></tr>',
+            'view' => $view
         ]);
     }
 

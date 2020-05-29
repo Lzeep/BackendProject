@@ -14,7 +14,7 @@
 <body>
 <h1>{{ $company->title . 'company' }}</h1>
 <div id="main">
-@include('total', $company)
+
 </div>
 <div class="row">
     <div class="col-6">

@@ -6,7 +6,6 @@
     </thead>
     <tbody>
     <tr>
-{{--        @dd($company->financial->total)--}}
             <td>{{ $company->financial->total_income }}</td>
             <td>{{ $company->financial->total_consumption }}</td>
             <td>{{ $company->financial->total }}</td>
