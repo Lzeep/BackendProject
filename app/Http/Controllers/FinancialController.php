@@ -85,12 +85,18 @@ class FinancialController extends Controller
 
     public function ajax_delete(Request $request)
     {
-        $financial = Company::find($request->company_id)->financial;
+        $company = Company::find($request->company_id);
+        $financial = $company->financial;
         if ($request->title == "income") {
             $income = collect($financial->income);
+
+            $deleting_income = $income[(int)$request->id];
+
             unset($income[(int)$request->id]);
             $financial->income = $income;
-            $financial->save();
+
+            $financial->total_income = $financial->total_income - $deleting_income['sum'];
+
         } else {
             $consumption = collect($financial->consumption);
             unset($consumption[(int)$request->id]);
@@ -111,6 +117,18 @@ class FinancialController extends Controller
             $financial->consumption = $consumptions;
             $financial->save();
 
+            $financial->total_consumption = $financial->total_consumption - $deleting_consumption['sum'];
+        }
+
+        $financial->total = $financial->total_income - $financial->total_consumption;
+
+        $financial->save();
+
+        $view = view('total', ['company' => $company])->render();
+        return response()->json([
+            'view' => $view
+        ]);
+    }
         }
         else{
             $incomes = collect($financial->income);
@@ -120,10 +138,8 @@ class FinancialController extends Controller
         }
         $view = view('total', ['company' => $company])->render();
 
+    public function ajax_edit() {
 
-        return response()->json([
-            'view' => $view
-        ]);
     }
     /**
      * Display the specified resource.

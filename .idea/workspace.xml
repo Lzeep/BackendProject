@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="6ca55706-81e7-4ff4-b068-817fe361e487" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/FinancialController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/FinancialController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/show.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/total.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/total.blade.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -122,6 +125,11 @@
       <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
       <path value="$PROJECT_DIR$/vendor/symfony/console" />
     </include_path>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1280" />
+    <option name="height" value="737" />
   </component>
   <component name="ProjectId" id="1cWScwkX0G3TWP08z563qYLqnZc" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
